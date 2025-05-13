@@ -1,0 +1,49 @@
+{
+  "name": "Next.js + Prisma Development",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "nextjs",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "Prisma.prisma",
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "steoates.autoimport",
+        "formulahendry.auto-rename-tag",
+        "streetsidesoftware.code-spell-checker",
+        "dsznajder.es7-react-js-snippets",
+        "christian-kohler.npm-intellisense",
+        "ms-playwright.playwright",
+        "vitest.explorer",
+        "storybookjs.storybook"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "typescript.enablePromptUseWorkspaceTsdk": true,
+        "emmet.includeLanguages": {
+          "javascript": "javascriptreact"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "prettier.semi": true,
+        "prettier.singleQuote": true,
+        "prettier.trailingComma": "all",
+        "prettier.tabWidth": 2,
+        "[prisma]": {
+          "editor.defaultFormatter": "Prisma.prisma"
+        }
+      }
+    }
+  },
+  "forwardPorts": [3000, 6006, 5555],
+  "postCreateCommand": "npm install && npx prisma generate",
+  "postStartCommand": "npm run dev",
+  "shutdownAction": "stopCompose",
+  "waitFor": "onCreateCommand"
+}

@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  nextjs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextjs-app
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    depends_on:
+      db:
+        condition: service_healthy
+
+  docusaurus:
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    container_name: docs-app
+    restart: always
+    ports:
+      - "3001:3000"      # Utilise le port 3001 sur l'hôte pour éviter les conflits
+      - "35729:35729"    # Port pour le hot reload
+    volumes:
+      - ./docs:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run start
+
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lan_mds
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+
+
+volumes:
+  db_data:
+    driver: local
